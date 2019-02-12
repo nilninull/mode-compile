@@ -1,6 +1,6 @@
 ;;; mode-compile.el --- compile files according to major-mode
 
-;; Copyright (C) 1994-2006  Heddy Boubaker
+;; Copyright (C) 1994-2006, 2019  Heddy Boubaker
 
 ;; Author: Heddy Boubaker <heddy.Boubaker@cena.fr>
 ;; Maintainer: wanted
@@ -35,7 +35,7 @@
 ;;  command which  is  very dumb  for  creating it's  compilation command (use
 ;;  "make  -k" by default).  `mode-compile'  is  a layer  above `compile'; Its
 ;;  purpose is mainly   to  build a  smart  compile-command for  `compile'  to
-;;  execute  it. This   compile-command is   built   according  to number   of
+;;  execute  it.  This   compile-command is   built   according  to number   of
 ;;  parameters:
 ;;   - the major-mode.
 ;;   - presence or not of a makefile in current directory.
@@ -62,7 +62,7 @@
 ;;  (global-set-key "\C-ck" 'mode-compile-kill)
 ;;
 ;;  By  default mode-compile is  very verbose  and  waits a  few seconds (1 by
-;;  default) after  each message for   the user to have  time  to read it. You
+;;  default) after  each message for   the user to have  time  to read it.  You
 ;;  could      set           variables      `mode-compile-expert-p'        and
 ;;  `mode-compile-reading-time'   to  change  this    behaviour.  On X-Windows
 ;;  systems  setting the variable  `mode-compile-other-frame-p'  will create a
@@ -70,7 +70,7 @@
 ;;
 ;;  (*) Don't take care of messages:
 ;;        ** reference to free variable efs-remote-shell-file-name
-;;      This is perfectly normal ;-}. But if you know a way to avoid it let me
+;;      This is perfectly normal ;-}.  But if you know a way to avoid it let me
 ;;      know.
 ;;
 ;; @ Documentation:
@@ -247,7 +247,7 @@
 
 ;; @ Requirements ;;;
 
-(require 'cl)
+;; (require 'cl)
 (require 'compile)
 
 ;; @ Custom groups ;;;
@@ -292,7 +292,7 @@
     (tcl-mode              . (tcl-compile       kill-compilation)) ; JWH
     (python-mode           . (python-compile    kill-compilation)) ; BM
     (ruby-mode             . (ruby-compile      kill-compilation)) ; CLGC
-    ;(message-mode          . (message-compile   kill-compilation))
+    ;; (message-mode          . (message-compile   kill-compilation))
     (fundamental-mode      . (guess-compile     nil)) ; bound dynamically
     (text-mode             . (guess-compile     nil)) ; itou
     (indented-text-mode    . (guess-compile     nil)) ; itou
@@ -301,7 +301,7 @@
 
 Each element look like (MODE . (COMPILE-FUNCTION KILL-FUNCTION))
  `mode-compile' will call COMPILE-FUNCTION and `mode-compile-kill'
- KILL-FUNCTION if current major-mode is MODE.
+ KILL-FUNCTION if current `major-mode' is MODE.
 
 If you want to add or modify a COMPILE-FUNCTION and it's associated
 KILL-FUNCTION for MODE and don't want to hack `mode-compile' you could
@@ -342,11 +342,11 @@ modifying, this is left as an exercice for the reader :-):
 
 Each element look like (REGEXP . MODE) This variable is really similar
 to `auto-mode-alist' in the fact that it associate a MODE to a REGEXP
-matching a filename. The only differences is that you are not obliged
+matching a filename.  The only differences is that you are not obliged
 to have the specified MODE available to use it (`guess-compile' use
 it), the MODE is only a pointer to an assoq in
 `mode-compile-modes-alist' to get the COMPILE-FUNCTION and the
-KILL-FUNCTION. The REGEXP could be a form wich evaluate to a string.
+KILL-FUNCTION.  The REGEXP could be a form wich evaluate to a string.
 
 To add a new filename regexp do the following:
  (setq mode-compile-filename-regexp-alist
@@ -354,14 +354,14 @@ To add a new filename regexp do the following:
                mode-compile-modes-alist))"
   :type '(repeat
           (cons :tag "Association: filename/mode"
-           (choice :tag "Filename regexp match"
-            (regexp :tag "Regexp as a string")
-            (symbol :tag "Variable containing the regexp")
-            (sexp :tag "Form wich evaluate to a string"))
-           ;; I need to bind dynamicaly this with const, ideas??
-           ;;`(choice
-           ;; ,@(mapcar (lambda (x) `(const ,(car x))) mode-compile-modes-alist))))
-           (function :tag "Mode to use -- should be a valid assoq in mode-compile-modes-alist --")))
+                (choice :tag "Filename regexp match"
+                        (regexp :tag "Regexp as a string")
+                        (symbol :tag "Variable containing the regexp")
+                        (sexp :tag "Form wich evaluate to a string"))
+                ;; I need to bind dynamicaly this with const, ideas??
+                ;;`(choice
+                ;; ,@(mapcar (lambda (x) `(const ,(car x))) mode-compile-modes-alist))))
+                (function :tag "Mode to use -- should be a valid assoq in mode-compile-modes-alist --")))
   :group 'compilation)
 
 (defcustom mode-compile-shell-alist
@@ -369,14 +369,14 @@ To add a new filename regexp do the following:
     ("csh"    .  csh-mode)
     ("zsh"    .  zsh-mode)
     ("perl"   .  perl-mode)
-    ("tcl"    .   tcl-mode) ; JWH
-    ("python" . python-mode) ; BM
-    ("ruby"   . ruby-mode)) ; CLGC
+    ("tcl"    .   tcl-mode)             ; JWH
+    ("python" . python-mode)            ; BM
+    ("ruby"   . ruby-mode))             ; CLGC
   "Assoc list of compile function for some known shells.
 
 Each element look like (SHELL . MODE) This variable look like
 `auto-mode-alist' in the fact that it associate a MODE to a name; A
-SHELL name here. The main difference is that you are not obliged to
+SHELL name here.  The main difference is that you are not obliged to
 have the specified MODE available to use it (`guess-compile' use it),
 the MODE is only a pointer to an assoq in `mode-compile-modes-alist'
 to get the COMPILE-FUNCTION and the KILL-FUNCTION.
@@ -387,11 +387,11 @@ To add a new shell do the following:
                mode-compile-modes-alist))"
   :type '(repeat
           (cons :tag "Association: shell name/mode"
-           (string :tag "Shell name")
-           ;; I need to bind dynamicaly this with const, ideas??
-           ;;`(choice
-           ;; ,@(mapcar (lambda (x) `(const ,(car x))) mode-compile-modes-alist))))
-           (function :tag "Mode to use -- should be a valid assoq in mode-compile-modes-alist --")))
+                (string :tag "Shell name")
+                ;; I need to bind dynamicaly this with const, ideas??
+                ;;`(choice
+                ;; ,@(mapcar (lambda (x) `(const ,(car x))) mode-compile-modes-alist))))
+                (function :tag "Mode to use -- should be a valid assoq in mode-compile-modes-alist --")))
   :group 'compilation)
 
 ;;;###autoload
@@ -410,7 +410,7 @@ If you have GNU make installed with name \"gmake\" use it."
 
 (defcustom mode-compile-makefile-backups-regexp
   "\\(\\(~\\|\\.[bB][aA][cC]?[kK]\\)$\\)\\|\\(\\(^\\|/\\)[.,][^/]+$\\)"
-  "Regexp to find if a Makefile is a backup or not"
+  "Regexp to find if a Makefile is a backup or not."
   :type 'regexp
   :group 'compilation)
 
@@ -466,7 +466,7 @@ The 'none action is taken as default is something fail."
   "*Makefile rules which must be ignored when building completion list.
 
 For example if you want to remove all `files rules' set
-it to: \"\\\\.\\\\([aoc]\\\\|s[ao][.0-9]*\\\\)\". "
+it to: \"\\\\.\\\\([aoc]\\\\|s[ao][.0-9]*\\\\)\"."
   :type '(choice (const :tag "none" :value nil)
                  (const :tag "The `all files' rule" :value "\\.\\([aoc]\\|s[ao][.0-9]*\\)")
                  regexp)
@@ -519,9 +519,9 @@ Emacs.MODE-COMPILE-OTHER-FRAME-NAME.resource_to_be_set: ..."
 (defconst mode-compile-default-frame-parameters
   (list
    (cons 'name   mode-compile-other-frame-name)
-   (cons 'width  85)  ; columns
-   (cons 'height 30)) ; lines
-   "Default parameters for mode-compile's other frame.")
+   (cons 'width  85)                    ; columns
+   (cons 'height 30))                   ; lines
+  "Default parameters for mode-compile's other frame.")
 
 (defvar mode-compile-frame-parameters-alist
   (purecopy mode-compile-default-frame-parameters)
@@ -571,7 +571,7 @@ when `mode-compile-kill' is invoked."
   (cond
    ((memq system-type '(ms-dos emx windows-95 windows-98 windows-nt)) ".exe")
    (t ""))
-  "*Extension of executable files (with dot included)")
+  "*Extension of executable files (with dot included).")
 
 (defvar mode-compile-dir-separator-char
   (cond
@@ -579,7 +579,7 @@ when `mode-compile-kill' is invoked."
    ((memq system-type '(ms-dos emx windows-95 windows-98 windows-nt)) "\\")
    ;; Unixish file systems
    (t "/"))
-  "*Separator char between directories")
+  "*Separator char between directories.")
 
 ;; @@ Facilities variables ;;;
 
@@ -621,8 +621,8 @@ See also variable variable mode-compile-reading-time."
   "*Seconds to wait in verbose mode after printing a message.
 
 In verbose mode mode-compile print too much messages that it is
-allmost impossible to read them. Just setting this delay leave you the
-time to read all the messages. If you don't want any delay set it to
+allmost impossible to read them.  Just setting this delay leave you the
+time to read all the messages.  If you don't want any delay set it to
 `0'.
 
 See also function sit-for."
@@ -642,7 +642,7 @@ to use to log on (HOSTNAME . USERNAME).
 If USERNAME is a function it will be called with HOSTNAME as argument
 and should return an USERNAME string (for example you could use
 something like efs-get-user - not tested -), if it is nil the function
-user-login-name will be used."
+`user-login-name' will be used."
   :type '(repeat
           (cons
            (string :tag "Hostname")
@@ -660,7 +660,7 @@ user-login-name will be used."
 remote-shell-program or efs-remote-shell-file-name at load time."
   :type 'string
   :group 'compilation)
-(eval-when 'load
+(cl-eval-when 'load
   (cond
    ((not (string= mode-compile-remote-execute-command "rsh"))
     ;; user changed default
@@ -674,16 +674,14 @@ remote-shell-program or efs-remote-shell-file-name at load time."
    ))
 
 (defcustom mode-compile-remote-execute-set-host-arg ""
-  "Argument To set the remote host name to the
-mode-compile-remote-execute-command,
+  "Argument To set the remote host name to the `mode-compile-remote-execute-command'.
 
 None is required for \"rsh\"."
   :type 'string
   :group 'compilation-remote)
 
 (defcustom mode-compile-remote-execute-set-command-arg ""
-  "Argument to set the command to be run remotely to the
-mode-compile-remote-execute-command.
+  "Argument to set the command to be run remotely to the `mode-compile-remote-execute-command'.
 
 None is required for \"rsh\"."
   :type 'string
@@ -691,13 +689,13 @@ None is required for \"rsh\"."
 
 (defcustom mode-compile-remote-execute-set-username-arg "-l"
   "Argument to set the username under which we will log on
-on the remote host, to give to mode-compile-remote-execute-command."
+on the remote host, to give to `mode-compile-remote-execute-command'."
   :type 'string
   :group 'compilation-remote)
 
 (defcustom mode-compile-remote-execute-misc-args ""
   "Misc additionnals arguments to give to the
-mode-compile-remote-execute-command."
+`mode-compile-remote-execute-command'."
   :type 'string
   :group 'compilation-remote)
 
@@ -769,7 +767,7 @@ See `mode-compile-choosen-compiler' variable."
   :group 'compile-c)
 
 (defcustom cc-build-output-args t
-  "Build output-args for c-mode."
+  "Build output-args for `c-mode'."
   :type 'boolean
   :group 'compile-c)
 
@@ -870,8 +868,7 @@ in java mode."
   :group 'compile-c++)
 
 (defcustom c++-companion-file-regexp "\\(_[Pp]\\)?\\.\\([pP]?[Hh][Hh]?\\|[Hh]\\+\\+?\\)"
-  "Regexp to find associated compileable C++ companion file
-from a header file."
+  "Regexp to find associated compileable C++ companion file from a header file."
   :type 'regexp
   :group 'compile-c++)
 
@@ -1004,7 +1001,7 @@ This is useless in Ada because there do not exists uncompileable files."
   :group 'compile-ada)
 
 (defcustom ada-build-output-args t
-  "Build output-args for ada-mode."
+  "Build output-args for `ada-mode'."
   :type 'boolean
   :group 'compile-ada)
 
@@ -1098,7 +1095,7 @@ in Fortran mode."
   :group 'compilation-script)
 
 (defcustom sh-command "sh"
-  "Command to run sh scripts"
+  "Command to run sh scripts."
   :type 'string
   :group 'compile-sh)
 
@@ -1114,7 +1111,7 @@ The -f flag must always be present."
   ;; error occured.
   "Alist that specifies how to match errors in sh output.
 
-See variable compilation-error-regexp-alist for more details.")
+See variable `compilation-error-regexp-alist' for more details.")
 
 
 ;; @@ csh-mode compile variables ;;;
@@ -1123,7 +1120,7 @@ See variable compilation-error-regexp-alist for more details.")
   :group 'compilation-script)
 
 (defcustom csh-command "csh"
-  "Command to run csh scripts"
+  "Command to run csh scripts."
   :type 'string
   :group 'compile-csh)
 
@@ -1139,7 +1136,7 @@ The -f flag must always be present."
   ;; error occured.
   "Alist that specifies how to match errors in csh output.
 
-See variable compilation-error-regexp-alist for more details.")
+See variable `compilation-error-regexp-alist' for more details.")
 
 
 ;; @@ zsh-mode compile variables ;;;
@@ -1148,7 +1145,7 @@ See variable compilation-error-regexp-alist for more details.")
   :group 'compilation-script)
 
 (defcustom zsh-command "zsh"
-  "Command to run zsh scripts"
+  "Command to run zsh scripts."
   :type 'string
   :group 'compile-zsh)
 
@@ -1162,7 +1159,7 @@ See variable compilation-error-regexp-alist for more details.")
   ;; error occured.
   "Alist that specifies how to match errors in csh output.
 
-See variable compilation-error-regexp-alist for more details.")
+See variable `compilation-error-regexp-alist' for more details.")
 
 
 ;; @@ tcl-mode compile variables - JWH ;;;
@@ -1171,7 +1168,7 @@ See variable compilation-error-regexp-alist for more details.")
   :group 'compilation-script)
 
 (defcustom tcl-command "wish"
-  "Command to run tcl scripts"
+  "Command to run tcl scripts."
   :type 'string
   :group 'compile-tcl)
 
@@ -1187,7 +1184,7 @@ See variable compilation-error-regexp-alist for more details.")
     )
   "Alist that specifies how to match errors in tcl output.
 
-See variable compilation-error-regexp-alist for more details.")
+See variable `compilation-error-regexp-alist' for more details.")
 
 
 ;; @@ python-mode compile variables - BM ;;;
@@ -1196,7 +1193,7 @@ See variable compilation-error-regexp-alist for more details.")
   :group 'compilation-script)
 
 (defcustom python-command "python"
-  "Command to run python scripts"
+  "Command to run python scripts."
   :type 'string
   :group 'compile-python)
 
@@ -1212,7 +1209,7 @@ See variable compilation-error-regexp-alist for more details.")
     )
   "Alist that specifies how to match errors in python output.
 
-See variable compilation-error-regexp-alist for more details.")
+See variable `compilation-error-regexp-alist' for more details.")
 
 
 ;; @@ perl-mode compile variables ;;;
@@ -1244,7 +1241,7 @@ See variable compilation-error-regexp-alist for more details.")
   ;;'(("^[^\n]* \\(file\\|at\\) \\([^ \t\n]+\\) [^\n]*line \\([0-9]+\\)[\\.,]" 2 3))
   "Alist that specifies how to match errors in perl output.
 
-See variable compilation-error-regexp-alist for more details.")
+See variable `compilation-error-regexp-alist' for more details.")
 
 
 ;; @@ ruby-mode compile variables ;;;
@@ -1252,14 +1249,14 @@ See variable compilation-error-regexp-alist for more details.")
   "Ruby compilation options"
   :group 'compilation-script)
 
-(defcustom ruby-command "ruby" 
-  "Command to run ruby" 
-  :type 'string 
+(defcustom ruby-command "ruby"
+  "Command to run ruby."
+  :type 'string
   :group 'compile-ruby)
 
-(defcustom ruby-dbg-flags "-w" 
-  "Flags to give ruby for catching warnings" 
-  :type 'string 
+(defcustom ruby-dbg-flags "-w"
+  "Flags to give ruby for catching warnings."
+  :type 'string
   :group 'compile-ruby)
 
 (defvar ruby-compilation-error-regexp-alist
@@ -1270,7 +1267,7 @@ See variable compilation-error-regexp-alist for more details.")
     ("\\(.*?\\)\\([0-9A-Za-z_./\:-]+\\.rb\\):\\([0-9]+\\)" 2 3))
   "Alist that specifies how to match errors in ruby output.
 
-See variable compilation-error-regexp-alist for more details.")
+See variable `compilation-error-regexp-alist' for more details.")
 
 
 ;; @@ emacs lisp compile variables ;;;
@@ -1291,12 +1288,12 @@ needing to be recompiled or not."
     emacs-lisp-file-regexp)
    (t
     "\\.el$"))
-  "Regexp to find emacs lisp sources files."
+  "Regexp to find Emacs Lisp sources files."
   :type 'regexp
   :group 'compilation-elisp)
 
 (defcustom emacs-lisp-bytecomp-ext "c"
-  "Extension added to byte-compiled emacs sources files."
+  "Extension added to byte-compiled Emacs sources files."
   :type 'string
   :group 'compilation-elisp)
 
@@ -1323,9 +1320,9 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
 (or (fboundp 'mc--compile-sav)
     (if (fboundp 'compile)
         (progn
-          (fset 'mc--compile-sav (symbol-function 'compile))
+          (defalias 'mc--compile-sav 'compile)
           (put 'compile 'compile-saved-on-mc--compile-sav t))
-      (error "`compile' function not known to be defined...")))
+      (error "`compile' function not known to be defined")))
 
 ;; @@ Internals variables and constants ;;;
 
@@ -1415,11 +1412,12 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
 
 ;; @@ Internals functions and macros ;;;
 
-(if (not (fboundp 'defsubst))
-    ;; Emacs 18
-    (fset 'defsubst (symbol-function 'defun)))
+;; (if (not (fboundp 'defsubst))
+;;     ;; Emacs 18
+;;     (fset 'defsubst (symbol-function 'defun)))
 
 (defun mc--compile (compile-command)
+  ""
   ;; Call compile with the compile command
   ;; but append the remote-command before
   (if (null mc--remote-command)
@@ -1437,6 +1435,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
         compile-command " )'")))))
 
 (defsubst mc--msg (msg &rest args)
+  ""
   ;; Print MSG with ARGS and wait to let time to user
   ;; to read the message in minibuffer.
   (cond ((not mode-compile-expert-p)
@@ -1447,11 +1446,11 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
  ;; Check availaibles frames functions
  ((fboundp 'make-frame)
   ;; GNU Emacs
-  (fset 'mc--make-frame         (symbol-function 'make-frame))
-  (fset 'mc--select-frame       (symbol-function 'select-frame))
-  (fset 'mc--frame-live-p       (symbol-function 'frame-live-p))
-  (fset 'mc--make-frame-visible (symbol-function 'make-frame-visible))
-  (fset 'mc--raise-frame        (symbol-function 'raise-frame)))
+  (defalias 'mc--make-frame         'make-frame)
+  (defalias 'mc--select-frame       'select-frame)
+  (defalias 'mc--frame-live-p       'frame-live-p)
+  (defalias 'mc--make-frame-visible 'make-frame-visible)
+  (defalias 'mc--raise-frame        'raise-frame))
  ((fboundp 'make-screen)
   ;; XEmacs
   (fset 'mc--make-frame         (symbol-function 'make-screen))
@@ -1468,6 +1467,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
   (fset 'mc--raise-frame        (symbol-function 'raise-screen))))
 
 (defsubst mc--funcall (command &rest params)
+  ""
   ;; Run command with params in another frame or not:
   ;; only if user ask for it and if window system is X
   ;; (maybe test window-system is set will be enought?).
@@ -1479,16 +1479,16 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
                (win-attr (or mode-compile-frame-parameters-alist
                              mode-compile-default-frame-parameters))
                (frame   (cond ((fboundp 'mc--frame-live-p)
-                                (if (mc--frame-live-p mc--other-frame)
-                                    mc--other-frame
-                                  nil))
-                               (t
-                                (mc--msg "Don't know how to check frame existence.")
-                                nil))))
+                               (if (mc--frame-live-p mc--other-frame)
+                                   mc--other-frame
+                                 nil))
+                              (t
+                               (mc--msg "Don't know how to check frame existence.")
+                               nil))))
            (cond ((fboundp 'mc--make-frame)
                   (mc--select-frame (or frame
-                                         (setq mc--other-frame
-                                               (mc--make-frame win-attr))))
+                                        (setq mc--other-frame
+                                              (mc--make-frame win-attr))))
                   ;; I really don't understand why the 3 following
                   ;; are necessary (raise-frame must be enought?).
                   (mc--make-frame-visible mc--other-frame)
@@ -1500,6 +1500,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
   (apply command params))
 
 (defun mc--byte-compile-buffer()
+  ""
   (if (fboundp 'byte-compile-buffer) (byte-compile-buffer)
     ;; No byte-compile-buffer
     ;; Save current-buffer in a temporary file and byte-compile it.
@@ -1524,30 +1525,28 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
                                 elc-file err)))))
         (message nil))))) ; to clean minibuffer
 
-(fset 'mc--member
-      (if (fboundp 'member)
-          (symbol-function 'member)
-        ;; No member function
-        (function
-         (lambda (elt list)
-           (catch 'elt-is-member
-             (while list
-               (if (equal elt (car list))
-                   (throw 'elt-is-member list))
-               (setq list (cdr list))))))))
+(if (fboundp 'member)
+    (defalias 'mc--member'member)
+  (defun mc--member (elt list)
+    ""
+    (catch 'elt-is-member
+      (while list
+        (if (equal elt (car list))
+            (throw 'elt-is-member list))
+        (setq list (cdr list))))))
 
-(fset 'mc--run-hooks
-      (if (fboundp 'run-hooks)
-          (symbol-function 'run-hooks)
-        ;; No run-hooks
-        (function
-         (lambda (hooklist)
-           (mapcar '(lambda (x)
-                      ;; report an error if x not a function
-                      (funcall x))
-                   hooklist)))))
+(if (fboundp 'run-hooks)
+    (defalias 'mc--run-hooks 'run-hooks)
+  ;; No run-hooks
+  (defun mc--run-hooks (hooklist)
+    ""
+    (mapcar (lambda (x)
+              ;; report an error if x not a function
+              (funcall x))
+            hooklist)))
 
 (defsubst mc--read-string (prompt &optional initial-contents)
+  ""
   ;; On Lucid Emacs I use compile-history as 3rd argument but
   ;; no history is possible with GNU emacs.
   (if mc--lucid-emacs-p
@@ -1555,20 +1554,22 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
     (read-string prompt initial-contents)))
 
 (defmacro mc--eval (sym &optional arg)
+  ""
   ;; Evaluate symbol
-  (` (cond
-      ((and (symbolp (, sym))
-            (fboundp (, sym)))
-       (funcall (, sym) (, arg)))
-      (t
-       (eval (, sym))))))
+  `(cond ((and (symbolp ,sym)
+               (fboundp ,sym))
+          (funcall ,sym ,arg))
+         (t
+          (eval ,sym))))
 
 (defmacro mc--common-completion (alist)
+  ""
   ;; Return the greatest common string for all
   ;; possible completions in alist.
-  (` (try-completion "" (, alist))))
+  `(try-completion "" ,alist))
 
 (defun mc--byte-recompile-files (files)
+  ""
   ;; Byte recompile all FILES which are older than their
   ;; .elc files in the current directory
   (let ((tmp-fl files))
@@ -1579,7 +1580,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
         ;; is el-file newer than elc-file (if exists)
         (if (and (file-newer-than-file-p el-file elc-file)
                  (or (not emacs-lisp-byte-compile-dir-interactive-p)
-                     (y-or-n-p (format "byte-recompile file %s? " el-file))))
+                     (y-or-n-p (format "Byte recompile file %s? " el-file))))
             (condition-case err
                 (byte-compile-file el-file)
               ;; handler
@@ -1589,6 +1590,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
     (mc--msg "All files processed")))
 
 (defun mc--which (file)
+  ""
   ;; Find an executable FILE in exec-path
   (if (not (stringp file))
       (error "mc--which: nil FILE arg"))
@@ -1596,7 +1598,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
       ;; Some emacses don't have locate-file some have...
       ;; Lucid have it in standard, some others (GNU) have it
       ;; (add-on pkg) but the syntax is not always consistent...
-;      (locate-file file exec-path nil 1)
+      ;; (locate-file file exec-path nil 1)
       (locate-file file exec-path mode-compile-exe-file-ext 1)
     (let ((tmp-p-lst  exec-path)
           (found      nil)
@@ -1613,6 +1615,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
       (if found file-found nil))))
 
 (defun mc--find-compiler ()
+  ""
   ;; Find user's favourite mode compiler
   (mc--msg "Searching for your favourite %s compiler ..." mode-name)
   (let ((tmp-comp-lst mc--comp-lst)
@@ -1626,6 +1629,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
           (file-name-nondirectory (or compiler (mc--eval mc--def-comp)))))))
 
 (defun mc--find-to-compile-file (&optional fname)
+  ""
   ;; Find the name of the file to compile.
   (let ((file-name (or fname
                        (buffer-file-name)
@@ -1664,18 +1668,18 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
      (t
       ;; Buffer has an unknown file extension
       ;; Could I be more cool?
-      (error "Compilation abort: Don't know how to compile %s."
+      (error "Compilation abort: Don't know how to compile %s"
              (file-name-nondirectory file-name))))))
 
 (defun mc--guess-compile-result-fname (infile)
+  ""
   ;; Try to guess if outfile will be an object file or
   ;; an executable file by grepping for `main()' in INFILE.
   (let ((base-fname
          (substring infile 0
                     (string-match mc--source-ext-regexp infile))))
-    (save-excursion
+    (with-current-buffer (find-file-noselect infile)
       ;; Create a temporary buffer containing infile contents
-      (set-buffer (find-file-noselect infile))
       (save-excursion
         (save-restriction
           (widen)
@@ -1689,6 +1693,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
             (concat base-fname "." mc--outfile-ext)))))))
 
 (defun mc--build-output-args (infile)
+  ""
   ;; Build output arguments for compile command by scanning INFILE.
   (mc--msg "Looking into %s to build compile command ..." infile)
   (let ((out-file (mc--guess-compile-result-fname infile)))
@@ -1702,6 +1707,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
             infile " -o " out-file )))
 
 (defun mc--set-remote-cmd (remote-host &optional username pathname)
+  ""
   ;; Check validity of remote-host or ask one to user
   ;; Then build the first part of the remote command
   (if (stringp remote-host)
@@ -1742,7 +1748,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
                mc--remote-username                           " "
                mode-compile-remote-execute-misc-args         " "
                mode-compile-remote-execute-set-command-arg   " "
-                )))
+               )))
     ;; Arg is: Ask to user then check
     (let ((rhost (completing-read
                   "Remote host to compile to: "
@@ -1755,12 +1761,14 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
       (or (string= rhost "")
           (mc--set-remote-cmd rhost)))))
 
-;(defmacro mc--makefile-test-p (makefile)
-;  (` (and (, makefile)
-;          (not (string-equal     (, makefile) ""))
-;          (not (file-directory-p (, makefile)))
-;          (file-readable-p       (, makefile)))))
+;; (defmacro mc--makefile-test-p (makefile)
+;;   `(and ,makefile
+;;         (not (string-equal     ,makefile ""))
+;;         (not (file-directory-p ,makefile))
+;;         (file-readable-p       ,makefile)))
+
 (defun mc--makefile-test-p (makefile)
+  ""
   (cond
    ((or (not makefile)
         (string-equal makefile ""))
@@ -1775,16 +1783,14 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
    (t)))
 
 
-(if (not (fboundp 'buffer-modified-tick))
-    (fset 'buffer-modified-tick
-          ;; allways indicate modified
-          (function
-           (lambda()
-             (if mc--mkfl-buffer-tick
-                 (+ mc--mkfl-buffer-tick 1)
-               1)))))
+(unless (fboundp 'buffer-modified-tick)
+  (defun buffer-modified-tick ()
+    (if mc--mkfl-buffer-tick
+        (+ mc--mkfl-buffer-tick 1)
+      1)))
 
-(defun  mc--get-makefile-rules (makefile)
+(defun mc--get-makefile-rules (makefile)
+  ""
   ;; Try to find if makefile's buffer has been modified
   ;; since last rule extraction
   (if (or (not mc--mkfl-buffer-tick)
@@ -1818,6 +1824,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
   (append mc--makefile-rules '([])))
 
 (defun mc--makerule-completion (alist outfile &optional pref)
+  ""
   ;; Return the makerule completion according to the prefered
   ;; default makerule
   (let ((preference (or pref
@@ -1848,15 +1855,15 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
       (mc--makerule-completion alist outfile 'none)))))
 
 (defun mc--choose-makefile-rule (makefile &optional outfile)
+  ""
   ;; Choose the makefile rule and set it makefile local
-  (save-excursion
+  (with-current-buffer (find-file-noselect makefile)
     ;; Switch to makefile buffer
-    (set-buffer (find-file-noselect makefile))
     (setq mc--selected-makerule
           ;; Add the name of the out file to the makefile
           ;; rules list if not allready in.
           (let* ((mk-rules-alist (mc--get-makefile-rules makefile))
-                 (choices        (mapcar '(lambda (x) (list x))
+                 (choices        (mapcar (lambda (x) (list x))
                                          (if (or (not outfile)
                                                  (mc--member outfile
                                                              mk-rules-alist))
@@ -1877,22 +1884,23 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
              )))))
 
 (defmacro mc--cleanup-makefile-list (makefile-list)
+  ""
   ;; Remove unusable and/or backups makefiles from list
-  (` (let ((newlist))
-       (mapcar
-        '(lambda (x)
-           (if (and (mc--makefile-test-p x)
-                    (or (not mode-compile-ignore-makefile-backups)
-                        (not (string-match
-                              mode-compile-makefile-backups-regexp
-                              x))))
-               (setq newlist (cons x newlist))
-             (mc--msg "Removing makefile \"%s\" from completion list"
-                      x)))
-        (, makefile-list))
-       newlist)))
+  `(let ((newlist))
+     (mapc (lambda (x)
+             (if (and (mc--makefile-test-p x)
+                      (or (not mode-compile-ignore-makefile-backups)
+                          (not (string-match
+                                mode-compile-makefile-backups-regexp
+                                x))))
+                 (setq newlist (cons x newlist))
+               (mc--msg "Removing makefile \"%s\" from completion list"
+                        x)))
+           ,makefile-list)
+     newlist))
 
 (defun mc--makefile-to-use (&optional directory)
+  ""
   ;; Find the makefile to use in the current directory
   (let ((makefile-list (mc--cleanup-makefile-list
                         (directory-files
@@ -1901,40 +1909,37 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
                          ;; only 4 parameters - no NOSORT -.
                          (or directory default-directory)
                          nil mode-compile-makefile-regexp t))))
-    (cond
-     ((not makefile-list)
-      ;; No makefile found
-      nil)
+    (cond ((not makefile-list)
+           ;; No makefile found
+           nil)
 
-     ((and (not (cdr-safe makefile-list))
-           (mc--makefile-test-p (car makefile-list)))
-      ;; Only one valid makefile
-      (car makefile-list))
+          ((and (not (cdr-safe makefile-list))
+                (mc--makefile-test-p (car makefile-list)))
+           ;; Only one valid makefile
+           (car makefile-list))
 
-     (t
-      ;; Many makefiles in directory ask user to select one
-      (let ((choices  (mapcar
-                       '(lambda (x) (list x))
-                       makefile-list))
-            (makefile nil))
-        (while
-            ;; While the makefile do not pass the test.
-            (not (mc--makefile-test-p
-                  (setq makefile
-                        (completing-read
-                         (if mode-compile-expert-p
-                             "Makefile: "
-                           "Using `make', select makefile to use ([TAB] to complete): ")
-                         choices
-                         nil t
-                         ;; initial contents
-                         (or mc--selected-makefile
-                             (mc--common-completion choices))
-                         mc--selected-makefile-history
-                         )))))
-        makefile)))))
+          (t
+           ;; Many makefiles in directory ask user to select one
+           (let ((choices (mapcar #'list makefile-list))
+                 makefile)
+             ;; While the makefile do not pass the test.
+             (while (not (mc--makefile-test-p
+                          (setq makefile
+                                (completing-read
+                                 (if mode-compile-expert-p
+                                     "Makefile: "
+                                   "Using `make', select makefile to use ([TAB] to complete): ")
+                                 choices
+                                 nil t
+                                 ;; initial contents
+                                 (or mc--selected-makefile
+                                     (mc--common-completion choices))
+                                 mc--selected-makefile-history
+                                 )))))
+             makefile)))))
 
 (defun mc--set-command (&optional file)
+  ""
   ;; Return a compilation command, built according to the existence
   ;; of a makefile or not, to compile FILE .
   (setq completion-ignore-case nil) ; let completion be case sensitive
@@ -1961,14 +1966,14 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
           (setq mc--compile-command
                 (concat (setq mode-compile-choosen-compiler
                               (mc--find-compiler)) " "
-                        (or (getenv mc--cflags-varenv)
-                            (mc--eval mc--comp-options))
-                        (if to-compile-fname
-                            (if mc--build-op-args
-				(mc--build-output-args to-compile-fname)
-			      (concat " " to-compile-fname)
-			      )
-                          " "))))
+                              (or (getenv mc--cflags-varenv)
+                                  (mc--eval mc--comp-options))
+                              (if to-compile-fname
+                                  (if mc--build-op-args
+                                      (mc--build-output-args to-compile-fname)
+                                    (concat " " to-compile-fname)
+                                    )
+                                " "))))
       (if (not mode-compile-never-edit-command-p)
           (setq mc--compile-command
                 (mc--read-string
@@ -1982,6 +1987,7 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
         mc--compile-command))))
 
 (defun mc--shell-compile (shell dbgflags &optional errors-regexp-alist)
+  ""
   ;; Run SHELL with debug flags DBGFLAGS on current-buffer
   (let* ((shcmd   (or (mc--which shell)
                       (error "Compilation abort: command %s not found" shell)))
@@ -2000,30 +2006,33 @@ Please send bugs-fixes/contributions/comments to boubaker@cena.fr")
         (progn
           ;; Set compilation-error-regexp-alist from compile
           (or (listp errors-regexp-alist)
-              (error "Compilation abort: In mc--shell-compile errors-regexp-alist not a list."))
+              (error "Compilation abort: In mc--shell-compile errors-regexp-alist not a list"))
           ;; Add new regexp alist to compilation-error-regexp-alist
-          (mapcar '(lambda(x)
-                     (if (mc--member x compilation-error-regexp-alist) nil
-                       (setq compilation-error-regexp-alist
-                             (append (list x)
-                                     compilation-error-regexp-alist))))
-                  errors-regexp-alist)))
+          (mapc (lambda (x)
+                  (if (mc--member x compilation-error-regexp-alist) nil
+                    (setq compilation-error-regexp-alist
+                          (append (list x)
+                                  compilation-error-regexp-alist))))
+                errors-regexp-alist)))
     ;; Run compile with run-cmd
     (mc--compile run-cmd)))
 
 (defmacro mc--assq-get-fcomp (asq)
+  ""
   ;; Return compile-function associated to ASQ
-  (` (let* ((mode  (cdr  (, asq)))
-            (massq (assq mode mode-compile-modes-alist)))
-       (if massq (car-safe (cdr massq))))))
+  `(let* ((mode  (cdr  ,asq))
+          (massq (assq mode mode-compile-modes-alist)))
+     (if massq (car-safe (cdr massq)))))
 
 (defmacro mc--assq-get-fkill (asq)
+  ""
   ;; Return kill-compile-function associated to ASQ
-  (` (let* ((mode  (cdr  (, asq)))
-            (massq (assq mode mode-compile-modes-alist)))
-       (if massq (car-safe (cdr-safe (cdr massq)))))))
+  `(let* ((mode  (cdr  ,asq))
+          (massq (assq mode mode-compile-modes-alist)))
+     (if massq (car-safe (cdr-safe (cdr massq))))))
 
 (defun mc--lookin-for-shell ()
+  ""
   ;; Look into current-buffer to see if it is a shell script
   ;; and return function to compile it or nil.
   (mc--msg "Looking if buffer %s is a shell script..." (buffer-name))
@@ -2259,7 +2268,7 @@ The user is prompted for a selection of make rules to build."
                   (or (mc--eval mode-compile-make-options) "")
                   " -f " mkfile " "
                   (mc--choose-makefile-rule mkfile))))
-    (mc--compile mc--compile-command))
+  (mc--compile mc--compile-command))
 
 
 (defun dired-compile ()
@@ -2373,17 +2382,17 @@ Ask to user to edit `compile-command' and run `compile' (\\[compile]) with it."
 
 (defvar mc--makefile) ;; Just to avoid compiler warning
 (defun guess-compile ()
-  "Try to guess how to compile current-buffer.
+  "Try to guess how to compile current buffer.
 
-When the compile command could not be extrapolated from major-mode this function
+When the compile command could not be extrapolated from `major-mode' this function
 is called which try to guess from number of parameters which command to build.
 The steps to guess which command to use to compile are:
   1st : Look into the file to check if it is a shell script
-        See variable mode-compile-shell-alist
+        See variable `mode-compile-shell-alist'
   2nd : Try to guess from the file name
-        See variable mode-compile-filename-regexp-alist
+        See variable `mode-compile-filename-regexp-alist'
   3rd : Look for a makefile in the current directory
-        See variable mode-compile-makefile-regexp
+        See variable `mode-compile-makefile-regexp'
   Last: Give up and ask user for the command to use
         See function default-compile"
   (mc--msg "Trying to guess how to compile buffer %s ..." (buffer-name))
@@ -2415,8 +2424,8 @@ The steps to guess which command to use to compile are:
 ;; @ user accessible/exported function ;;;
 
 ;; get reporter-submit-bug-report when byte-compiling
-(and (fboundp 'eval-when-compile)
-     (eval-when-compile (require 'reporter)))
+;; (and (fboundp 'eval-when-compile)
+;;      (eval-when-compile (require 'reporter)))
 
 ;;;###autoload
 (defun mode-compile-submit-bug-report ()
